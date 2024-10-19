@@ -45,7 +45,6 @@ class AdvancedOptions:
     def apply_color_customization(self):
         color_option = self.color_var.get()
         if color_option == "By Element":
-            # Color atoms by element type (basic example)
             colors = {
                 'H': 'white', 'C': 'black', 'O': 'red', 'N': 'blue'
             }
@@ -53,8 +52,7 @@ class AdvancedOptions:
                 color = colors.get(atom['symbol'], 'gray')
                 self.visualizer_app.ax.scatter(atom['x'], atom['y'], atom['z'], color=color, s=100)
         elif color_option == "Custom":
-            # Apply custom colors (you could add a color picker dialog here)
-            custom_color = 'yellow'  # Example
+            custom_color = 'yellow'
             for atom in self.visualizer_app.geometry:
                 self.visualizer_app.ax.scatter(atom['x'], atom['y'], atom['z'], color=custom_color, s=100)
         self.visualizer_app.canvas.draw()
@@ -83,12 +81,15 @@ class AdvancedOptions:
         ttk.Button(self.frame, text="Save Geometry", command=self.save_geometry).grid(row=8, column=1)
 
     def export_image(self):
-        self.visualizer_app.fig.savefig('molecule_visualization.png')
-        print("Visualization exported as molecule_visualization.png")
+        image_filename = f'{self.visualizer_app.output_filename_entry.get()}_visualization.png'
+        self.visualizer_app.fig.savefig(image_filename)
+        print(f"Visualization exported as {image_filename}")
 
     def save_geometry(self):
-        output_file = 'converted_geometry.txt'  # Example file name
+        output_file = self.visualizer_app.output_filename_entry.get() 
+        output_format = self.visualizer_app.output_format_var.get()  
+        output_unit = self.visualizer_app.output_unit_var.get()  
         self.visualizer_app.reader_converter.save_converted_geometry(
-            self.visualizer_app.geometry, 'xyz', output_file, 'angstrom'
+            self.visualizer_app.geometry, output_format, output_file, output_unit
         )
         print(f"Geometry saved to {output_file}")
