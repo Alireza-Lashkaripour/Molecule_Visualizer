@@ -11,65 +11,112 @@ class MoleculeVisualizerApp:
         self.root = root
         self.root.title("Molecule Visualizer and Converter")
 
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+        self.style.configure("TLabel", font=("Helvetica", 12))
+        self.style.configure("TButton", font=("Helvetica", 10))
+        self.style.configure("TEntry", font=("Helvetica", 10))
+
         self.reader_converter = GeometryReaderAndConverter()
         self.visualizer = GeometryVisualizer()
 
-        # Input Section
-        self.input_label = ttk.Label(root, text="Input Geometry", padding=10)
-        self.input_label.grid(row=0, column=0, columnspan=2)
+        self.frame = ttk.Frame(root, padding="10")
+        self.frame.grid(row=0, column=0, padx=10, pady=10)
 
-        self.geometry_textbox = tk.Text(root, height=10, width=50)
+        self.input_label = ttk.Label(self.frame, text="Input Geometry")
+        self.input_label.grid(row=0, column=0, columnspan=2, sticky="W")
+
+        self.geometry_textbox = tk.Text(self.frame, height=10, width=50)
         self.geometry_textbox.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
-        self.input_format_label = ttk.Label(root, text="Input Format (GAMESS or XYZ)", padding=5)
-        self.input_format_label.grid(row=2, column=0)
-        self.input_format_var = tk.StringVar(root)
-        self.input_format_dropdown = ttk.OptionMenu(root, self.input_format_var, "gamess", "gamess", "xyz")
+        self.input_format_label = ttk.Label(self.frame, text="Input Format (GAMESS or XYZ)")
+        self.input_format_label.grid(row=2, column=0, sticky="W")
+        self.input_format_var = tk.StringVar(self.frame)
+        self.input_format_dropdown = ttk.OptionMenu(self.frame, self.input_format_var, "gamess", "gamess", "xyz")
         self.input_format_dropdown.grid(row=2, column=1, padx=5)
 
-        self.input_unit_label = ttk.Label(root, text="Input Unit (Angstrom or Bohr)", padding=5)
-        self.input_unit_label.grid(row=3, column=0)
-        self.input_unit_var = tk.StringVar(root)
-        self.input_unit_dropdown = ttk.OptionMenu(root, self.input_unit_var, "bohr", "bohr", "angstrom")
+        self.input_unit_label = ttk.Label(self.frame, text="Input Unit (Angstrom or Bohr)")
+        self.input_unit_label.grid(row=3, column=0, sticky="W")
+        self.input_unit_var = tk.StringVar(self.frame)
+        self.input_unit_dropdown = ttk.OptionMenu(self.frame, self.input_unit_var, "bohr", "bohr", "angstrom")
         self.input_unit_dropdown.grid(row=3, column=1, padx=5)
 
-        self.load_button = ttk.Button(root, text="Load Geometry from File", command=self.load_geometry_file)
+        self.load_button = ttk.Button(self.frame, text="Load Geometry from File", command=self.load_geometry_file)
         self.load_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
 
-        # Output Section
-        self.output_label = ttk.Label(root, text="Output Settings", padding=10)
-        self.output_label.grid(row=5, column=0, columnspan=2)
+        self.output_label = ttk.Label(self.frame, text="Output Settings")
+        self.output_label.grid(row=5, column=0, columnspan=2, sticky="W", pady=10)
 
-        self.output_filename_entry = ttk.Entry(root, width=30)
+        self.output_filename_entry = ttk.Entry(self.frame, width=30)
         self.output_filename_entry.grid(row=6, column=1, padx=5)
-        self.output_filename_label = ttk.Label(root, text="Output File Name", padding=5)
-        self.output_filename_label.grid(row=6, column=0)
+        self.output_filename_label = ttk.Label(self.frame, text="Output File Name")
+        self.output_filename_label.grid(row=6, column=0, sticky="W")
 
-        self.output_format_label = ttk.Label(root, text="Output Format (GAMESS or XYZ)", padding=5)
-        self.output_format_label.grid(row=7, column=0)
-        self.output_format_var = tk.StringVar(root)
-        self.output_format_dropdown = ttk.OptionMenu(root, self.output_format_var, "xyz", "xyz", "gamess")
+        self.output_format_label = ttk.Label(self.frame, text="Output Format (GAMESS or XYZ)")
+        self.output_format_label.grid(row=7, column=0, sticky="W")
+        self.output_format_var = tk.StringVar(self.frame)
+        self.output_format_dropdown = ttk.OptionMenu(self.frame, self.output_format_var, "xyz", "xyz", "gamess")
         self.output_format_dropdown.grid(row=7, column=1, padx=5)
 
-        self.output_unit_label = ttk.Label(root, text="Output Unit (Angstrom or Bohr)", padding=5)
-        self.output_unit_label.grid(row=8, column=0)
-        self.output_unit_var = tk.StringVar(root)
-        self.output_unit_dropdown = ttk.OptionMenu(root, self.output_unit_var, "angstrom", "angstrom", "bohr")
+        self.output_unit_label = ttk.Label(self.frame, text="Output Unit (Angstrom or Bohr)")
+        self.output_unit_label.grid(row=8, column=0, sticky="W")
+        self.output_unit_var = tk.StringVar(self.frame)
+        self.output_unit_dropdown = ttk.OptionMenu(self.frame, self.output_unit_var, "angstrom", "angstrom", "bohr")
         self.output_unit_dropdown.grid(row=8, column=1, padx=5)
 
-        self.convert_button = ttk.Button(root, text="Convert and Visualize", command=self.convert_and_visualize)
-        self.convert_button.grid(row=9, column=0, columnspan=2, padx=5, pady=5)
+        self.convert_button = ttk.Button(self.frame, text="Convert and Visualize", command=self.convert_and_visualize)
+        self.convert_button.grid(row=9, column=0, columnspan=2, padx=5, pady=10)
 
-        # Bond Display Option
         self.show_bonds_var = tk.IntVar(value=1)
-        self.show_bonds_checkbox = ttk.Checkbutton(root, text="Show Bonds", variable=self.show_bonds_var)
+        self.show_bonds_checkbox = ttk.Checkbutton(self.frame, text="Show Bonds", variable=self.show_bonds_var)
         self.show_bonds_checkbox.grid(row=10, column=0, columnspan=2)
 
-        # Visualization Section
-        self.fig = plt.figure(figsize=(5, 5))
+        self.fig = plt.figure(figsize=(7, 7))
         self.ax = self.fig.add_subplot(111, projection='3d')
         self.canvas = FigureCanvasTkAgg(self.fig, master=root)
-        self.canvas.get_tk_widget().grid(row=11, column=0, columnspan=2)
+        self.canvas.get_tk_widget().grid(row=11, column=0, columnspan=2, padx=10, pady=10)
+
+        self.canvas.mpl_connect('scroll_event', self.zoom)  # Adding zoom with the scroll wheel
+
+        self.zoom_factor = 1.0  # Initial zoom factor
+
+        self.create_fullscreen_button()
+
+    def create_fullscreen_button(self):
+        self.fullscreen_button = ttk.Button(self.frame, text="Toggle Fullscreen", command=self.toggle_fullscreen)
+        self.fullscreen_button.grid(row=12, column=0, columnspan=2, pady=10)
+
+    def toggle_fullscreen(self):
+        is_fullscreen = self.root.attributes('-fullscreen')
+        self.root.attributes('-fullscreen', not is_fullscreen)
+        self.canvas.get_tk_widget().config(width=self.root.winfo_width(), height=self.root.winfo_height())
+        self.canvas.draw()
+
+    def zoom(self, event):
+        if event.button == 'up':
+            self.zoom_factor *= 1.1
+        elif event.button == 'down':
+            self.zoom_factor /= 1.1
+
+        self.ax.set_xlim(self.ax.get_xlim() * self.zoom_factor)
+        self.ax.set_ylim(self.ax.get_ylim() * self.zoom_factor)
+        self.ax.set_zlim(self.ax.get_zlim() * self.zoom_factor)
+        self.canvas.draw
+    def zoom(self, event):
+        if event.button == 'up':
+            self.zoom_factor *= 1.1
+        elif event.button == 'down':
+            self.zoom_factor /= 1.1
+
+        xlim = self.ax.get_xlim()
+        ylim = self.ax.get_ylim()
+        zlim = self.ax.get_zlim()
+
+        self.ax.set_xlim([x * self.zoom_factor for x in xlim])
+        self.ax.set_ylim([y * self.zoom_factor for y in ylim])
+        self.ax.set_zlim([z * self.zoom_factor for z in zlim])
+
+        self.canvas.draw()
 
     def load_geometry_file(self):
         file_path = filedialog.askopenfilename()
@@ -84,6 +131,10 @@ class MoleculeVisualizerApp:
         output_unit = self.output_unit_var.get()
         output_format = self.output_format_var.get()
         output_file = self.output_filename_entry.get()
+
+        if not output_file:
+            print("Please provide a valid output file name.")
+            return
 
         geometry_data = self.geometry_textbox.get(1.0, tk.END).strip().splitlines()
 
@@ -110,15 +161,35 @@ class MoleculeVisualizerApp:
         if self.show_bonds_var.get():
             self.draw_bonds(atoms)
 
+        max_range = np.ptp(atoms, axis=0).max()
+        mid_x, mid_y, mid_z = np.mean(atoms, axis=0)
+        self.ax.set_xlim(mid_x - max_range / 2, mid_x + max_range / 2)
+        self.ax.set_ylim(mid_y - max_range / 2, mid_y + max_range / 2)
+        self.ax.set_zlim(mid_z - max_range / 2, mid_z + max_range / 2)
+
     def draw_bonds(self, atoms):
-        bond_threshold = 1.5  # Adjust this for bond lengths
+        bond_thresholds = {
+            "single": 1.6,
+            "double": 1.3,
+            "triple": 1.2,
+        }
+
         for i in range(len(atoms)):
             for j in range(i + 1, len(atoms)):
                 distance = np.linalg.norm(atoms[i] - atoms[j])
-                if distance <= bond_threshold:
+
+                if distance <= bond_thresholds["triple"]:
                     self.ax.plot([atoms[i, 0], atoms[j, 0]],
                                  [atoms[i, 1], atoms[j, 1]],
-                                 [atoms[i, 2], atoms[j, 2]], 'r-', lw=2)
+                                 [atoms[i, 2], atoms[j, 2]], 'r-', lw=4)
+                elif distance <= bond_thresholds["double"]:
+                    self.ax.plot([atoms[i, 0], atoms[j, 0]],
+                                 [atoms[i, 1], atoms[j, 1]],
+                                 [atoms[i, 2], atoms[j, 2]], 'g-', lw=3)
+                elif distance <= bond_thresholds["single"]:
+                    self.ax.plot([atoms[i, 0], atoms[j, 0]],
+                                 [atoms[i, 1], atoms[j, 1]],
+                                 [atoms[i, 2], atoms[j, 2]], 'b-', lw=2)
 
 if __name__ == "__main__":
     root = tk.Tk()
