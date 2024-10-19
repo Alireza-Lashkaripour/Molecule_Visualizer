@@ -5,6 +5,7 @@ from Visualizer import GeometryVisualizer
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
+from advanced_options import AdvancedOptions
 
 class MoleculeVisualizerApp:
     def __init__(self, root):
@@ -82,6 +83,9 @@ class MoleculeVisualizerApp:
 
         self.create_fullscreen_button()
 
+        # Initialize advanced options
+        self.advanced_options = AdvancedOptions(root, self)
+
     def create_fullscreen_button(self):
         self.fullscreen_button = ttk.Button(self.frame, text="Toggle Fullscreen", command=self.toggle_fullscreen)
         self.fullscreen_button.grid(row=12, column=0, columnspan=2, pady=10)
@@ -92,16 +96,6 @@ class MoleculeVisualizerApp:
         self.canvas.get_tk_widget().config(width=self.root.winfo_width(), height=self.root.winfo_height())
         self.canvas.draw()
 
-    def zoom(self, event):
-        if event.button == 'up':
-            self.zoom_factor *= 1.1
-        elif event.button == 'down':
-            self.zoom_factor /= 1.1
-
-        self.ax.set_xlim(self.ax.get_xlim() * self.zoom_factor)
-        self.ax.set_ylim(self.ax.get_ylim() * self.zoom_factor)
-        self.ax.set_zlim(self.ax.get_zlim() * self.zoom_factor)
-        self.canvas.draw
     def zoom(self, event):
         if event.button == 'up':
             self.zoom_factor *= 1.1
@@ -142,11 +136,11 @@ class MoleculeVisualizerApp:
             for line in geometry_data:
                 temp_file.write(f"{line}\n")
 
-        geometry = self.reader_converter.read_geometry("temp_geometry.txt", input_unit)
-        self.reader_converter.save_converted_geometry(geometry, output_format, output_file, output_unit)
+        self.geometry = self.reader_converter.read_geometry("temp_geometry.txt", input_unit)
+        self.reader_converter.save_converted_geometry(self.geometry, output_format, output_file, output_unit)
 
         self.ax.clear()
-        self.visualize_with_bonds(geometry)
+        self.visualize_with_bonds(self.geometry)
         self.canvas.draw()
 
     def visualize_with_bonds(self, geometry):
