@@ -35,13 +35,9 @@ Requirements:
 
 Install the required packages:
 
-csharp
-
-pip install matplotlib numpy
-sudo apt-get install python3-tk  # For Linux users
+    pip install matplotlib numpy
+    sudo apt-get install python3-tk  # For Linux users
 
 Running the Program:
 
-bash
-
-python molecule_visualizer_gui.py
+    python molecule_visualizer_gui.py
