@@ -11,7 +11,6 @@ class MoleculeVisualizerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Molecule Visualizer and Converter")
-
         self.style = ttk.Style()
         self.style.theme_use("clam")
         self.style.configure("TLabel", font=("Helvetica", 12))
@@ -77,13 +76,11 @@ class MoleculeVisualizerApp:
         self.canvas = FigureCanvasTkAgg(self.fig, master=root)
         self.canvas.get_tk_widget().grid(row=11, column=0, columnspan=2, padx=10, pady=10)
 
-        self.canvas.mpl_connect('scroll_event', self.zoom)  # Adding zoom with the scroll wheel
+        self.canvas.mpl_connect('scroll_event', self.zoom)
 
-        self.zoom_factor = 1.0  # Initial zoom factor
-
+        self.zoom_factor = 1.0
         self.create_fullscreen_button()
 
-        # Initialize advanced options
         self.advanced_options = AdvancedOptions(root, self)
 
     def create_fullscreen_button(self):
@@ -189,3 +186,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MoleculeVisualizerApp(root)
     root.mainloop()
+
